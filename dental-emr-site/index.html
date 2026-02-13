@@ -18,6 +18,7 @@
         <a href="#features">Features</a>
         <a href="#workflow">Workflow</a>
         <a href="#security">Security</a>
+        <a href="#emr-console">EMR Console</a>
         <a href="#pricing">Pricing</a>
         <a href="#faq">FAQ</a>
       </nav>
@@ -101,7 +102,82 @@
       </div>
     </section>
 
-    <section id="pricing" class="section alt">
+    <section id="emr-console" class="section alt">
+      <div class="container">
+        <h2>Live EMR Console (Demo Functionality)</h2>
+        <p class="section-sub">Capture patients, schedule appointments, and add quick clinical notes. Data is stored in your browser for demo purposes.</p>
+
+        <div class="grid emr-grid">
+          <article class="card">
+            <h3>Add Patient</h3>
+            <form id="patient-form" class="stack-form">
+              <input name="name" type="text" placeholder="Patient full name" required />
+              <input name="phone" type="tel" placeholder="Phone" required />
+              <input name="dob" type="date" required />
+              <button class="btn" type="submit">Save Patient</button>
+            </form>
+          </article>
+
+          <article class="card">
+            <h3>Book Appointment</h3>
+            <form id="appointment-form" class="stack-form">
+              <select name="patientId" id="appt-patient" required>
+                <option value="">Select patient</option>
+              </select>
+              <input name="datetime" type="datetime-local" required />
+              <select name="reason" required>
+                <option value="">Visit reason</option>
+                <option>Consultation</option>
+                <option>Cleaning</option>
+                <option>Root Canal</option>
+                <option>Filling</option>
+                <option>Follow-up</option>
+              </select>
+              <button class="btn" type="submit">Book Appointment</button>
+            </form>
+          </article>
+
+          <article class="card">
+            <h3>Add Clinical Note</h3>
+            <form id="note-form" class="stack-form">
+              <select name="patientId" id="note-patient" required>
+                <option value="">Select patient</option>
+              </select>
+              <textarea name="note" rows="4" placeholder="SOAP/clinical note" required></textarea>
+              <button class="btn" type="submit">Save Note</button>
+            </form>
+          </article>
+        </div>
+
+        <div class="grid emr-grid mt">
+          <article class="card">
+            <div class="list-head">
+              <h3>Patients</h3>
+              <span id="patients-count" class="pill">0</span>
+            </div>
+            <ul id="patients-list" class="data-list"></ul>
+          </article>
+
+          <article class="card">
+            <div class="list-head">
+              <h3>Appointments</h3>
+              <span id="appointments-count" class="pill">0</span>
+            </div>
+            <ul id="appointments-list" class="data-list"></ul>
+          </article>
+
+          <article class="card">
+            <div class="list-head">
+              <h3>Clinical Notes</h3>
+              <span id="notes-count" class="pill">0</span>
+            </div>
+            <ul id="notes-list" class="data-list"></ul>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" class="section">
       <div class="container">
         <h2>Simple Pricing</h2>
         <div class="grid cards-3">
@@ -142,5 +218,7 @@
       <p>© 2026 DentaFlow EMR. All rights reserved.</p>
     </div>
   </footer>
+
+  <script src="app.js"></script>
 </body>
 </html>
