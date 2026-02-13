@@ -7,6 +7,28 @@ const appArea = document.getElementById('app-area');
 const sessionCard = document.getElementById('session-card');
 const whoami = document.getElementById('whoami');
 const logoutBtn = document.getElementById('logout');
+const roleBadge = document.getElementById('role-badge');
+const tabbar = document.getElementById('tabbar');
+
+let activeTab = 'intake';
+
+function setActiveTab(tab) {
+  activeTab = tab;
+  document.querySelectorAll('#tabbar button').forEach(b => {
+    b.classList.toggle('active', b.dataset.tab === tab);
+  });
+  document.querySelectorAll('[data-tab]').forEach(el => {
+    el.style.display = (el.getAttribute('data-tab') === tab) ? '' : 'none';
+  });
+}
+
+if (tabbar) {
+  tabbar.addEventListener('click', (e) => {
+    const btn = e.target?.closest('button[data-tab]');
+    if (!btn) return;
+    setActiveTab(btn.dataset.tab);
+  });
+}
 
 const patientsUl = document.getElementById('patients');
 const apptsUl = document.getElementById('appts');
@@ -79,9 +101,21 @@ async function boot() {
     const r = await api('/api/me');
     me = r.user;
     whoami.textContent = `Logged in as ${me.username} (${me.role})`;
+
+    if (roleBadge) {
+      roleBadge.textContent = `${me.username} • ${me.role}`;
+      roleBadge.style.display = '';
+    }
+    if (logoutBtn) logoutBtn.style.display = '';
+    if (tabbar) tabbar.style.display = '';
+
     appArea.style.display = '';
     sessionCard.style.display = '';
     roleGate();
+
+    // Default tab based on role
+    setActiveTab(me.role === 'reception' ? 'schedule' : 'intake');
+
     await loadAll();
   } catch {
     token = '';
@@ -100,9 +134,20 @@ loginForm.addEventListener('submit', async (e) => {
     me = data.user;
     loginMsg.textContent = 'Login successful';
     whoami.textContent = `Logged in as ${me.username} (${me.role})`;
+
+    if (roleBadge) {
+      roleBadge.textContent = `${me.username} • ${me.role}`;
+      roleBadge.style.display = '';
+    }
+    if (logoutBtn) logoutBtn.style.display = '';
+    if (tabbar) tabbar.style.display = '';
+
     appArea.style.display = '';
     sessionCard.style.display = '';
     roleGate();
+
+    setActiveTab(me.role === 'reception' ? 'schedule' : 'intake');
+
     await loadAll();
   } catch (err) {
     loginMsg.textContent = err.message;

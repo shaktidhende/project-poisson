@@ -7,9 +7,32 @@
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <main class="section">
+  <header class="app-topbar">
     <div class="container">
-      <h1>DentalEMR Application</h1>
+      <div class="bar">
+        <div>
+          <div class="app-title">DentalEMR</div>
+          <div class="muted">Demo EMR • secure role-based access</div>
+        </div>
+        <div class="app-actions">
+          <a class="btn btn-ghost btn-sm" href="/">← Back</a>
+          <span class="badge" id="role-badge" style="display:none"></span>
+          <button class="btn btn-ghost btn-sm" id="logout" style="display:none">Logout</button>
+        </div>
+      </div>
+      <div class="tabbar" id="tabbar" style="display:none">
+        <button data-tab="intake" class="active">Intake</button>
+        <button data-tab="schedule">Schedule</button>
+        <button data-tab="clinical">Clinical</button>
+        <button data-tab="billing">Billing</button>
+        <button data-tab="reports">Lists</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="section" style="padding-top: 24px;">
+    <div class="container">
+      <h1 style="margin-top:0">DentalEMR Application</h1>
       <p class="section-sub">Role-based login, appointments, treatment plans, prescriptions, invoices, and PDF billing.</p>
 
       <div class="grid two-col">
@@ -27,13 +50,13 @@
         <article class="card" id="session-card" style="display:none">
           <h3>Session</h3>
           <p id="whoami"></p>
-          <button class="btn btn-ghost" id="logout">Logout</button>
+          <p class="muted">Use the tabs above to navigate modules. Your role controls what you can see.</p>
         </article>
       </div>
 
       <section id="app-area" style="display:none; margin-top:16px;">
         <div class="grid emr-grid">
-          <article class="card">
+          <article class="card" data-tab="intake">
             <h3>Add Patient</h3>
             <form id="patient-form" class="stack-form">
               <input name="name" placeholder="Patient Name" required />
@@ -42,7 +65,7 @@
               <button class="btn" type="submit">Save</button>
             </form>
           </article>
-          <article class="card">
+          <article class="card" data-tab="schedule">
             <h3>Book Appointment</h3>
             <form id="appt-form" class="stack-form">
               <select id="appt-patient" required><option value="">Select Patient</option></select>
@@ -51,7 +74,7 @@
               <button class="btn" type="submit">Book</button>
             </form>
           </article>
-          <article class="card" id="invoice-card">
+          <article class="card" id="invoice-card" data-tab="billing">
             <h3>Add Invoice</h3>
             <form id="invoice-form" class="stack-form">
               <select id="invoice-patient" required><option value="">Select Patient</option></select>
@@ -64,7 +87,7 @@
         </div>
 
         <div class="grid emr-grid mt">
-          <article class="card" id="plan-card">
+          <article class="card" id="plan-card" data-tab="clinical">
             <h3>Add Treatment Plan</h3>
             <form id="plan-form" class="stack-form">
               <select id="plan-patient" required><option value="">Select Patient</option></select>
@@ -76,7 +99,7 @@
             </form>
           </article>
 
-          <article class="card" id="rx-card">
+          <article class="card" id="rx-card" data-tab="clinical">
             <h3>Add Prescription</h3>
             <form id="rx-form" class="stack-form">
               <select id="rx-patient" required><option value="">Select Patient</option></select>
@@ -89,7 +112,7 @@
             </form>
           </article>
 
-          <article class="card">
+          <article class="card" data-tab="clinical">
             <h3>Quick Notes (Doctor/Admin)</h3>
             <form id="note-form" class="stack-form">
               <select id="note-patient" required><option value="">Select Patient</option></select>
@@ -100,15 +123,15 @@
         </div>
 
         <div class="grid emr-grid mt">
-          <article class="card"><h3>Patients</h3><ul id="patients" class="data-list"></ul></article>
-          <article class="card"><h3>Appointments</h3><ul id="appts" class="data-list"></ul></article>
-          <article class="card"><h3>Invoices (PDF)</h3><ul id="invoices" class="data-list"></ul></article>
+          <article class="card" data-tab="reports"><h3>Patients</h3><ul id="patients" class="data-list"></ul></article>
+          <article class="card" data-tab="reports"><h3>Appointments</h3><ul id="appts" class="data-list"></ul></article>
+          <article class="card" data-tab="reports"><h3>Invoices (PDF)</h3><ul id="invoices" class="data-list"></ul></article>
         </div>
 
         <div class="grid emr-grid mt">
-          <article class="card"><h3>Treatment Plans</h3><ul id="plans" class="data-list"></ul></article>
-          <article class="card"><h3>Prescriptions</h3><ul id="rx" class="data-list"></ul></article>
-          <article class="card"><h3>Clinical Notes</h3><ul id="notes" class="data-list"></ul></article>
+          <article class="card" data-tab="reports"><h3>Treatment Plans</h3><ul id="plans" class="data-list"></ul></article>
+          <article class="card" data-tab="reports"><h3>Prescriptions</h3><ul id="rx" class="data-list"></ul></article>
+          <article class="card" data-tab="reports"><h3>Clinical Notes</h3><ul id="notes" class="data-list"></ul></article>
         </div>
       </section>
     </div>

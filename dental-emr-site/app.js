@@ -128,3 +128,19 @@ noteForm?.addEventListener('submit', (e) => {
 });
 
 render();
+
+// Mobile nav toggle (marketing page)
+const menuBtn = document.getElementById('menu-btn');
+const siteNav = document.getElementById('site-nav');
+if (menuBtn && siteNav) {
+  menuBtn.addEventListener('click', () => {
+    const isOpen = siteNav.classList.toggle('open');
+    menuBtn.setAttribute('aria-expanded', String(isOpen));
+  });
+  siteNav.addEventListener('click', (e) => {
+    if (e.target && e.target.tagName === 'A') {
+      siteNav.classList.remove('open');
+      menuBtn.setAttribute('aria-expanded', 'false');
+    }
+  });
+}

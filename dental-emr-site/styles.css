@@ -19,9 +19,35 @@ body {
 .logo { font-weight: 800; } .logo span { color: var(--brand); }
 nav { display: flex; gap: 18px; flex-wrap: wrap; }
 nav a { text-decoration: none; color: var(--muted); font-weight: 600; }
+
+/* Mobile hamburger */
+.menu-btn {
+  display: none;
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: #fff;
+  padding: 10px;
+}
+.menu-btn span {
+  display: block;
+  height: 2px;
+  background: var(--text);
+  border-radius: 2px;
+  margin: 5px 0;
+}
+
 .btn { background: var(--brand); color: #fff; border: none; border-radius: 12px; padding: 12px 16px; text-decoration: none; display: inline-block; font-weight: 700; cursor: pointer; }
 .btn-sm { padding: 9px 12px; }
 .btn-ghost { background: transparent; color: var(--brand); border: 1px solid var(--brand); }
+.btn:focus, .btn-ghost:focus, input:focus, select:focus, textarea:focus {
+  outline: 3px solid #93c5fd;
+  outline-offset: 2px;
+}
+
+.cta-row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; margin: 16px 0 10px; }
+
 .hero { padding: 72px 0 52px; }
 .hero-grid { display: grid; grid-template-columns: 1.15fr .85fr; gap: 24px; align-items: center; }
 .eyebrow { color: var(--brand); font-weight: 700; }
@@ -53,6 +79,56 @@ summary { cursor: pointer; font-weight: 600; }
 
 /* EMR functionality UI */
 .emr-grid { grid-template-columns: repeat(3, 1fr); }
+
+/* App shell */
+.app-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: #ffffffdd;
+  backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+}
+.app-topbar .bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 0;
+}
+.app-title { font-weight: 900; }
+.app-actions { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.badge {
+  background: #ecfeff;
+  border: 1px solid #a5f3fc;
+  color: #155e75;
+  font-size: .82rem;
+  font-weight: 800;
+  border-radius: 999px;
+  padding: 6px 10px;
+}
+.tabbar {
+  display: flex;
+  gap: 10px;
+  padding: 10px 0 14px;
+  overflow: auto;
+}
+.tabbar button {
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--muted);
+  font-weight: 800;
+  padding: 10px 12px;
+  border-radius: 999px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tabbar button.active {
+  border-color: #93c5fd;
+  color: #1e3a8a;
+  background: #eff6ff;
+}
+
 .stack-form { display: grid; gap: 10px; }
 .stack-form input,
 .stack-form select,
@@ -94,5 +170,31 @@ summary { cursor: pointer; font-weight: 600; }
 
 @media (max-width: 900px) {
   .hero-grid, .cards-3, .two-col, .demo-form, .emr-grid { grid-template-columns: 1fr; }
-  nav { display: none; }
+
+  /* Marketing nav becomes a drawer */
+  .menu-btn { display: inline-block; }
+  nav {
+    display: none;
+    position: fixed;
+    top: 64px;
+    left: 12px;
+    right: 12px;
+    background: #fff;
+    border: 1px solid var(--line);
+    border-radius: 16px;
+    padding: 12px;
+    box-shadow: 0 18px 40px #0f172a1a;
+    z-index: 50;
+  }
+  nav.open { display: grid; gap: 10px; }
+  nav a { padding: 10px 12px; border-radius: 12px; background: #f7faff; }
+
+  .hero { padding-top: 54px; }
+  .data-list { max-height: none; }
+}
+
+/* Small screens polish */
+@media (max-width: 420px) {
+  .btn { width: 100%; text-align: center; }
+  .nav { gap: 10px; }
 }
