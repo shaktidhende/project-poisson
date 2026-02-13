@@ -6,8 +6,16 @@ import bcrypt from 'bcryptjs';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const db = new Database(path.join(__dirname, '..', '..', 'emr.db'));
-db.pragma('journal_mode = WAL');
+// Vercel Serverless Functions run on a read-only filesystem except for /tmp.
+// For demo purposes, store the SQLite DB in /tmp when deployed on Vercel.
+const dbPath = process.env.VERCEL
+  ? path.join('/tmp', 'emr.db')
+  : path.join(__dirname, '..', '..', 'emr.db');
+
+const db = new Database(dbPath);
+
+// WAL mode can fail on serverless/ephemeral filesystems; stick to DELETE.
+db.pragma('journal_mode = DELETE');
 
 export function initDb() {
   db.exec(`
