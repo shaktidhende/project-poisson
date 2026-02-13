@@ -6,15 +6,17 @@ A modern one-page business website for a dental clinic EMR product.
 - `index.html`
 - `styles.css`
 
-## Run locally
+## Run locally (full-stack)
 From this folder:
 
 ```bash
-python3 -m http.server 8080
+npm install
+npm start
 ```
 
 Then open:
-- http://localhost:8080
+- http://localhost:8080 (landing)
+- http://localhost:8080/app-full.html (EMR app)
 
 ## Notes
 - Content is industry-standard placeholder copy for dental EMR.
