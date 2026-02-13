@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stock Analysis Explorer</title>
+    <link rel="stylesheet" href="styles.css">
+    <!-- Inter font for clean typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+</head>
+<body>
+    <header class="site-header">
+        <div class="container">
+            <div class="logo">Stock <span>Analysis</span></div>
+            <nav>
+                <a href="#how-it-works">How it Works</a>
+                <a href="#indicators">Indicators</a>
+                <a href="#data-sources">Data</a>
+                <a href="#disclaimer">Disclaimer</a>
+            </nav>
+        </div>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="container">
+                <h1>Stock Market Explorer</h1>
+                <p class="lead">An educational tool to visualize stock data and common indicators for BSE/NSE.</p>
+                <div class="cta-row">
+                    <a href="#explore" class="btn">Start Exploring</a>
+                    <a href="#disclaimer" class="btn btn-ghost">Learn Risks</a>
+                </div>
+            </div>
+        </section>
+
+        <section id="explore" class="section alt">
+            <div class="container">
+                <h2>Explore Stocks</h2>
+                <form id="stock-form" class="explore-form">
+                    <label for="stock-symbol">Select Stock (BSE/NSE):</label>
+                    <input type="text" id="stock-symbol" placeholder="e.g., RELIANCE, TCS, INFY" required>
+                    <button type="submit" class="btn">Fetch Data</button>
+                </form>
+                <div id="stock-data" class="stock-data-section" style="display: none;">
+                    <h3>Data for <span id="symbol-display"></span></h3>
+                    <div id="chart-placeholder" class="chart-container">
+                        <!-- Chart will be rendered here (conceptual) -->
+                        <p>Chart placeholder (requires JS charting library integration)</p>
+                    </div>
+                    <div class="data-grid">
+                        <div class="data-card">
+                            <h4>Key Metrics (Simulated)</h4>
+                            <ul id="key-metrics">
+                                <li>Price: <span id="current-price">-</span></li>
+                                <li>Day High: <span id="day-high">-</span></li>
+                                <li>Day Low: <span id="day-low">-</span></li>
+                                <li>Volume: <span id="volume">-</span></li>
+                            </ul>
+                        </div>
+                        <div class="data-card">
+                            <h4>Common Indicators (Conceptual)</h4>
+                            <ul id="indicators-display">
+                                <li>SMA (20): <span id="sma-20">-</span></li>
+                                <li>RSI (14): <span id="rsi-14">-</span></li>
+                                <li>MACD: <span id="macd">-</span></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                <div id="loading-indicator" style="display: none;">Loading data...</div>
+                <div id="error-message" style="display: none; color: red;"></div>
+            </div>
+        </section>
+
+        <section id="how-it-works" class="section">
+            <div class="container">
+                <h2>How it Works</h2>
+                <p class="lead">See the conceptual steps for using this educational tool.</p>
+                <div class="steps-grid">
+                    <div class="step">
+                        <h3>1. Select Stock</h3>
+                        <p>Enter a stock symbol (e.g., RELIANCE, TCS) from BSE or NSE.</p>
+                    </div>
+                    <div class="step">
+                        <h3>2. Fetch Data (Simulated)</h3>
+                        <p>The app will simulate fetching historical OHLCV data and conceptual indicator values.</p>
+                    </div>
+                    <div class="step">
+                        <h3>3. Visualize</h3>
+                        <p>Observe price charts and conceptual indicator readings to understand their presentation.</p>
+                    </div>
+                    <div class="step">
+                        <h3>4. Learn</h3>
+                        <p>Access detailed explanations of data sources and indicators.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="indicators" class="section alt">
+            <div class="container">
+                <h2>Key Indicators Explained</h2>
+                <p class="lead">Learn about common indicators used in technical analysis and their conceptual application.</p>
+                <div class="indicator-list">
+                    <div class="indicator-item">
+                        <h3>Moving Averages (SMA/EMA)</h3>
+                        <p>Smooth out price data to identify trends. (Conceptual: average of past 'N' prices)</p>
+                        <a href="https://www.investopedia.com/terms/m/movingaverage.asp" target="_blank">Learn More</a>
+                    </div>
+                    <div class="indicator-item">
+                        <h3>RSI (Relative Strength Index)</h3>
+                        <p>Measures price change magnitude to evaluate overbought/oversold conditions. (Conceptual: 0-100 scale)</p>
+                        <a href="https://www.investopedia.com/terms/r/relative-strength-index-rsi.asp" target="_blank">Learn More</a>
+                    </div>
+                    <div class="indicator-item">
+                        <h3>MACD (Moving Average Convergence Divergence)</h3>
+                        <p>A trend-following momentum indicator showing the relationship between two moving averages.</p>
+                        <a href="https://www.investopedia.com/terms/m/macd.asp" target="_blank">Learn More</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="data-sources" class="section">
+            <div class="container">
+                <h2>Data Sources & Research</h2>
+                <p class="lead">Where to find reliable stock market data and learn more about analysis.</p>
+                <div class="source-list">
+                    <div class="source-item">
+                        <h3>NSE India</h3>
+                        <p>Official exchange for Indian stocks.</p>
+                        <a href="https://www.nseindia.com/" target="_blank">Visit NSE</a>
+                    </div>
+                    <div class="source-item">
+                        <h3>BSE India</h3>
+                        <p>Bombay Stock Exchange, another major Indian exchange.</p>
+                        <a href="https://www.bseindia.com/" target="_blank">Visit BSE</a>
+                    </div>
+                    <div class="source-item">
+                        <h3>Financial Portals</h3>
+                        <p>Websites like Yahoo Finance, Google Finance offer historical data, news, and research.</p>
+                        <a href="https://finance.yahoo.com/" target="_blank">Explore Yahoo Finance</a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="disclaimer" class="section alt">
+            <div class="container">
+                <h2>Important Disclaimer</h2>
+                <p style="font-weight: 500;">This application is purely for educational and illustrative purposes. It does not provide investment advice, financial recommendations, or any form of trading signals. Stock market investments involve significant risks, and past performance is not indicative of future results. Always consult with a qualified financial advisor before making any investment decisions.</p>
+            </div>
+        </section>
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">
+            <p>© 2026 Stock Analysis Explorer. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script src="app.js"></script>
+</body>
+</html>
