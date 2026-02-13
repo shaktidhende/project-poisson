@@ -10,7 +10,7 @@
   <main class="section">
     <div class="container">
       <h1>DentalEMR Application</h1>
-      <p class="section-sub">Role-based login (Admin / Doctor / Reception), patients, appointments, notes, and billing.</p>
+      <p class="section-sub">Role-based login, appointments, treatment plans, prescriptions, invoices, and PDF billing.</p>
 
       <div class="grid two-col">
         <article class="card" id="login-card">
@@ -51,7 +51,7 @@
               <button class="btn" type="submit">Book</button>
             </form>
           </article>
-          <article class="card">
+          <article class="card" id="invoice-card">
             <h3>Add Invoice</h3>
             <form id="invoice-form" class="stack-form">
               <select id="invoice-patient" required><option value="">Select Patient</option></select>
@@ -64,9 +64,51 @@
         </div>
 
         <div class="grid emr-grid mt">
+          <article class="card" id="plan-card">
+            <h3>Add Treatment Plan</h3>
+            <form id="plan-form" class="stack-form">
+              <select id="plan-patient" required><option value="">Select Patient</option></select>
+              <input id="plan-diagnosis" placeholder="Diagnosis" required />
+              <textarea id="plan-text" rows="3" placeholder="Treatment plan" required></textarea>
+              <input id="plan-cost" type="number" step="0.01" placeholder="Estimated Cost" />
+              <select id="plan-status"><option>proposed</option><option>approved</option><option>in-progress</option><option>completed</option></select>
+              <button class="btn" type="submit">Save Plan</button>
+            </form>
+          </article>
+
+          <article class="card" id="rx-card">
+            <h3>Add Prescription</h3>
+            <form id="rx-form" class="stack-form">
+              <select id="rx-patient" required><option value="">Select Patient</option></select>
+              <input id="rx-medication" placeholder="Medication" required />
+              <input id="rx-dosage" placeholder="Dosage (e.g. 500mg)" required />
+              <input id="rx-frequency" placeholder="Frequency (e.g. twice daily)" required />
+              <input id="rx-duration" placeholder="Duration (e.g. 5 days)" required />
+              <textarea id="rx-instructions" rows="2" placeholder="Special instructions"></textarea>
+              <button class="btn" type="submit">Save Prescription</button>
+            </form>
+          </article>
+
+          <article class="card">
+            <h3>Quick Notes (Doctor/Admin)</h3>
+            <form id="note-form" class="stack-form">
+              <select id="note-patient" required><option value="">Select Patient</option></select>
+              <textarea id="note-text" rows="4" placeholder="Clinical note"></textarea>
+              <button class="btn" type="submit">Save Note</button>
+            </form>
+          </article>
+        </div>
+
+        <div class="grid emr-grid mt">
           <article class="card"><h3>Patients</h3><ul id="patients" class="data-list"></ul></article>
           <article class="card"><h3>Appointments</h3><ul id="appts" class="data-list"></ul></article>
-          <article class="card"><h3>Invoices</h3><ul id="invoices" class="data-list"></ul></article>
+          <article class="card"><h3>Invoices (PDF)</h3><ul id="invoices" class="data-list"></ul></article>
+        </div>
+
+        <div class="grid emr-grid mt">
+          <article class="card"><h3>Treatment Plans</h3><ul id="plans" class="data-list"></ul></article>
+          <article class="card"><h3>Prescriptions</h3><ul id="rx" class="data-list"></ul></article>
+          <article class="card"><h3>Clinical Notes</h3><ul id="notes" class="data-list"></ul></article>
         </div>
       </section>
     </div>

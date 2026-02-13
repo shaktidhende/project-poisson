@@ -4,6 +4,7 @@ import { fileURLToPath } from 'url';
 import Database from 'better-sqlite3';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
+import PDFDocument from 'pdfkit';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -58,6 +59,31 @@ CREATE TABLE IF NOT EXISTS invoices (
   created_at TEXT NOT NULL,
   FOREIGN KEY(patient_id) REFERENCES patients(id)
 );
+
+CREATE TABLE IF NOT EXISTS treatment_plans (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  patient_id INTEGER NOT NULL,
+  diagnosis TEXT NOT NULL,
+  plan TEXT NOT NULL,
+  estimated_cost REAL DEFAULT 0,
+  status TEXT NOT NULL DEFAULT 'proposed',
+  created_by TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY(patient_id) REFERENCES patients(id)
+);
+
+CREATE TABLE IF NOT EXISTS prescriptions (
+  id INTEGER PRIMARY KEY AUTOINCREMENT,
+  patient_id INTEGER NOT NULL,
+  medication TEXT NOT NULL,
+  dosage TEXT NOT NULL,
+  frequency TEXT NOT NULL,
+  duration TEXT NOT NULL,
+  instructions TEXT,
+  prescribed_by TEXT NOT NULL,
+  created_at TEXT NOT NULL,
+  FOREIGN KEY(patient_id) REFERENCES patients(id)
+);
 `);
 
 const userCount = db.prepare('SELECT COUNT(*) as c FROM users').get().c;
@@ -106,7 +132,7 @@ app.get('/api/patients', auth, (req, res) => {
   const rows = db.prepare('SELECT * FROM patients ORDER BY id DESC').all();
   res.json(rows);
 });
-app.post('/api/patients', auth, permit('admin','reception','doctor'), (req, res) => {
+app.post('/api/patients', auth, permit('admin', 'reception', 'doctor'), (req, res) => {
   const { name, phone, dob } = req.body;
   const result = db.prepare('INSERT INTO patients (name, phone, dob, created_at) VALUES (?,?,?,?)')
     .run(name, phone || '', dob || '', new Date().toISOString());
@@ -117,7 +143,7 @@ app.get('/api/appointments', auth, (req, res) => {
   const rows = db.prepare(`SELECT a.*, p.name as patient_name FROM appointments a JOIN patients p ON p.id=a.patient_id ORDER BY datetime DESC`).all();
   res.json(rows);
 });
-app.post('/api/appointments', auth, permit('admin','reception','doctor'), (req, res) => {
+app.post('/api/appointments', auth, permit('admin', 'reception', 'doctor'), (req, res) => {
   const { patient_id, datetime, reason } = req.body;
   const result = db.prepare('INSERT INTO appointments (patient_id, datetime, reason, created_at) VALUES (?,?,?,?)')
     .run(patient_id, datetime, reason || '', new Date().toISOString());
@@ -128,7 +154,7 @@ app.get('/api/notes', auth, (req, res) => {
   const rows = db.prepare(`SELECT n.*, p.name as patient_name FROM notes n JOIN patients p ON p.id=n.patient_id ORDER BY n.id DESC`).all();
   res.json(rows);
 });
-app.post('/api/notes', auth, permit('admin','doctor'), (req, res) => {
+app.post('/api/notes', auth, permit('admin', 'doctor'), (req, res) => {
   const { patient_id, note } = req.body;
   const result = db.prepare('INSERT INTO notes (patient_id, note, created_by, created_at) VALUES (?,?,?,?)')
     .run(patient_id, note, req.user.username, new Date().toISOString());
@@ -139,10 +165,87 @@ app.get('/api/invoices', auth, (req, res) => {
   const rows = db.prepare(`SELECT i.*, p.name as patient_name FROM invoices i JOIN patients p ON p.id=i.patient_id ORDER BY i.id DESC`).all();
   res.json(rows);
 });
-app.post('/api/invoices', auth, permit('admin','reception'), (req, res) => {
+app.post('/api/invoices', auth, permit('admin', 'reception'), (req, res) => {
   const { patient_id, amount, status, description } = req.body;
   const result = db.prepare('INSERT INTO invoices (patient_id, amount, status, description, created_at) VALUES (?,?,?,?,?)')
     .run(patient_id, amount, status || 'unpaid', description || '', new Date().toISOString());
+  res.json({ id: result.lastInsertRowid });
+});
+
+app.get('/api/invoices/:id/pdf', auth, (req, res) => {
+  const invoice = db.prepare(`
+    SELECT i.*, p.name as patient_name, p.phone, p.dob
+    FROM invoices i
+    JOIN patients p ON p.id=i.patient_id
+    WHERE i.id = ?
+  `).get(req.params.id);
+
+  if (!invoice) return res.status(404).json({ error: 'Invoice not found' });
+
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', `attachment; filename="invoice-${invoice.id}.pdf"`);
+
+  const doc = new PDFDocument({ margin: 50 });
+  doc.pipe(res);
+
+  doc.fontSize(20).text('DentalEMR Invoice', { align: 'center' });
+  doc.moveDown();
+  doc.fontSize(12).text(`Invoice #: ${invoice.id}`);
+  doc.text(`Date: ${new Date(invoice.created_at).toLocaleString()}`);
+  doc.moveDown();
+  doc.text(`Patient: ${invoice.patient_name}`);
+  doc.text(`Phone: ${invoice.phone || '-'}`);
+  doc.text(`DOB: ${invoice.dob || '-'}`);
+  doc.moveDown();
+  doc.text(`Description: ${invoice.description || '-'}`);
+  doc.text(`Amount: ₹${Number(invoice.amount).toFixed(2)}`);
+  doc.text(`Status: ${invoice.status}`);
+  doc.moveDown();
+  doc.text('Thank you for choosing DentalEMR.', { align: 'center' });
+
+  doc.end();
+});
+
+app.get('/api/treatment-plans', auth, (req, res) => {
+  const rows = db.prepare(`SELECT t.*, p.name as patient_name FROM treatment_plans t JOIN patients p ON p.id=t.patient_id ORDER BY t.id DESC`).all();
+  res.json(rows);
+});
+app.post('/api/treatment-plans', auth, permit('admin', 'doctor'), (req, res) => {
+  const { patient_id, diagnosis, plan, estimated_cost, status } = req.body;
+  const result = db.prepare(`
+    INSERT INTO treatment_plans (patient_id, diagnosis, plan, estimated_cost, status, created_by, created_at)
+    VALUES (?,?,?,?,?,?,?)
+  `).run(
+    patient_id,
+    diagnosis,
+    plan,
+    estimated_cost || 0,
+    status || 'proposed',
+    req.user.username,
+    new Date().toISOString()
+  );
+  res.json({ id: result.lastInsertRowid });
+});
+
+app.get('/api/prescriptions', auth, (req, res) => {
+  const rows = db.prepare(`SELECT r.*, p.name as patient_name FROM prescriptions r JOIN patients p ON p.id=r.patient_id ORDER BY r.id DESC`).all();
+  res.json(rows);
+});
+app.post('/api/prescriptions', auth, permit('admin', 'doctor'), (req, res) => {
+  const { patient_id, medication, dosage, frequency, duration, instructions } = req.body;
+  const result = db.prepare(`
+    INSERT INTO prescriptions (patient_id, medication, dosage, frequency, duration, instructions, prescribed_by, created_at)
+    VALUES (?,?,?,?,?,?,?,?)
+  `).run(
+    patient_id,
+    medication,
+    dosage,
+    frequency,
+    duration,
+    instructions || '',
+    req.user.username,
+    new Date().toISOString()
+  );
   res.json({ id: result.lastInsertRowid });
 });
 

@@ -21,3 +21,4 @@ Then open:
 ## Notes
 - Content is industry-standard placeholder copy for dental EMR.
 - Replace brand name, pricing, and contact form fields as needed.
+- Full app includes: role-based auth, appointments, treatment plans, prescriptions, billing invoices, and PDF invoice download.
