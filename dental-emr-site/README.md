@@ -1,13 +1,34 @@
 # Dental EMR Business Website
 
-A modern one-page business website for a dental clinic EMR product.
+A modern website + full-stack EMR demo for a dental clinic product.
 
-## Files
-- `index.html`
-- `styles.css`
+## Project structure
+
+```text
+dental-emr-site/
+├─ app-full.html          # EMR app UI
+├─ app-full.js            # EMR frontend logic (API integration)
+├─ index.html             # Marketing landing page
+├─ styles.css             # Shared styles
+├─ server.js              # Server entrypoint
+├─ package.json
+├─ package-lock.json
+├─ .gitignore
+└─ src/
+   ├─ app.js
+   ├─ config/
+   │  ├─ constants.js
+   │  └─ db.js
+   ├─ middleware/
+   │  └─ auth.js
+   ├─ routes/
+   │  ├─ auth.routes.js
+   │  └─ emr.routes.js
+   └─ services/
+      └─ pdf.js
+```
 
 ## Run locally (full-stack)
-From this folder:
 
 ```bash
 npm install
@@ -18,7 +39,12 @@ Then open:
 - http://localhost:8080 (landing)
 - http://localhost:8080/app-full.html (EMR app)
 
-## Notes
-- Content is industry-standard placeholder copy for dental EMR.
-- Replace brand name, pricing, and contact form fields as needed.
-- Full app includes: role-based auth, appointments, treatment plans, prescriptions, billing invoices, and PDF invoice download.
+## Included functionality
+- Role-based auth (Admin / Doctor / Reception)
+- Patient management
+- Appointment booking
+- Clinical notes
+- Treatment plans
+- Prescriptions
+- Billing invoices
+- PDF invoice download
