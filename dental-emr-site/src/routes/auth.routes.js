@@ -1,17 +1,23 @@
 import { Router } from 'express';
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import db from '../config/db.js';
+import { supabase } from '../config/db.js';
 import { JWT_SECRET } from '../config/constants.js';
 import { auth } from '../middleware/auth.js';
 
 const router = Router();
 
-router.post('/login', (req, res) => {
+router.post('/login', async (req, res) => {
   const { username, password } = req.body || {};
-  const user = db.prepare('SELECT * FROM users WHERE username=?').get(username);
+  
+  // Fetch user
+  const { data: user, error } = await supabase
+    .from('users')
+    .select('*')
+    .eq('username', username)
+    .single();
 
-  if (!user || !bcrypt.compareSync(password || '', user.password_hash)) {
+  if (error || !user || !bcrypt.compareSync(password || '', user.password_hash)) {
     return res.status(401).json({ error: 'Invalid credentials' });
   }
 
